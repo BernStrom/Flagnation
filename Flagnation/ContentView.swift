@@ -10,8 +10,18 @@ import SwiftUI
 struct ContentView: View {
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
+    @State private var numQuestions = 1
     @State private var scoreTitle = ""
+    @State private var scoreMessage = ""
+    @State private var scorePercentage = 0.0
     @State private var showingScore = false
+    @State private var endGame = false
+    
+    var score: String {
+        let scoreAmount = scorePercentage
+        let formattedScore = String(format: "%.1f" ,scoreAmount)
+        return formattedScore
+    }
     
     var body: some View {
         ZStack {
@@ -57,7 +67,16 @@ struct ContentView: View {
                 Spacer()
                 Spacer()
                 
-                Text("???")
+                Text("Question \(numQuestions) of 8")
+                    .font(.headline)
+                
+                Spacer()
+                
+                Text("Current Score:")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(.primary)
+                
+                Text("\(score)%")
                     .foregroundColor(.white)
                     .font(.title.bold())
                 
@@ -68,21 +87,48 @@ struct ContentView: View {
         .alert(scoreTitle, isPresented: $showingScore) {
             Button("Continue", action: askQuestion)
         } message: {
-            Text("Your scores is ???")
+            Text("""
+                 \(scoreMessage)
+                 Your current score is \(score)%.
+                 """)
+        }
+        .alert(scoreTitle, isPresented: $endGame) {
+            Button("Reset", action: reset)
+        } message: {
+            Text("You score a total of \(score)%.")
         }
     }
     
     func flagTapped(_ number: Int) {
         if number == correctAnswer {
             scoreTitle = "Correct"
+            scoreMessage = "Nicely done! 👏"
+            scorePercentage += 12.5
         } else {
             scoreTitle = "Wrong"
+            scoreMessage = "Nope, that's actually the flag of \(countries[number])."
         }
         
         showingScore = true
+        
+        if numQuestions == 8 {
+            endGame = true
+            scoreTitle = "Your Results"
+        }
     }
     
     func askQuestion() {
+        if numQuestions < 8 {
+            numQuestions += 1
+            countries.shuffle()
+            correctAnswer = Int.random(in: 0...2)
+        }
+    }
+    
+    func reset() {
+        numQuestions = 1
+        scorePercentage = 0.0
+        showingScore = false
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
     }
