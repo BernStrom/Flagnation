@@ -84,6 +84,7 @@ struct ContentView: View {
                             FlagImage(source: countries[flagNumber])
                                 .rotation3DEffect(.degrees(userTapped == flagNumber ? 360 : 0), axis: (x: 0, y: 1, z: 0))
                                 .opacity((userTapped == flagNumber || userTapped == -1) ? 1 : 0.25)
+                                .scaleEffect((userTapped == flagNumber || userTapped == -1) ? 1 : 0.75)
                                 .animation(.default, value: userTapped)
                         }
                     }
