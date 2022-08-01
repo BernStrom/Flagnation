@@ -24,7 +24,7 @@ An example, the app generated a country name and displays "*Germany*" and also r
 
 ## App preview
 
-
+https://user-images.githubusercontent.com/65307853/182215502-ef6c35be-ae91-4e47-a7cc-c7a9a4da6e38.mp4
 
 ## Trying it yourself
 
